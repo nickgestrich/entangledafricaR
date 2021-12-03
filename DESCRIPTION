@@ -26,3 +26,5 @@ Imports:
     utils
 Depends: 
     tidyverse
+URL: https://github.com/nickgestrich/entangledafricaR
+BugReports: https://github.com/nickgestrich/entangledafricaR/issues
