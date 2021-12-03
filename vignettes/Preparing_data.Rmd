@@ -1,0 +1,140 @@
+---
+title: "Preparing_data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Preparing_data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+# this code chunk contains all the libraries we need to use in this process. If they are not present, use install.packages("package x") to get them.
+
+#library(entangledafricaR)
+library(tidyverse) # for data transformation functions
+library(archdata)  # for archaeological example data
+```
+
+---
+title: "How to get a rectangular data matrix into shape for network analysis"
+subtitle: "Instructions for the SPP Entangled Africa network workshop, 11-12 June 2021 "
+author: "N Gestrich, J-M Puerta-Schardt"
+date: "2 - June - 2021"
+output: html_document
+---
+```{r libraries, echo=FALSE, warning=FALSE, message=FALSE}
+# this code chunk contains all the libraries we need to use in this process. If they are not present, use install.packages("package x") to get them.
+
+library(tidyverse) # for data transformation functions
+library(archdata)  # for archaeological example data
+```
+
+We will usually start our work with what is called a "rectangular" matrix of archaeological sites and finds. Rectangular in this case means that the row and column names are not identical. There are two ways of getting this data ready for network analysis. The first is to create a square matrix or adjacency matrix, the second is to create an edge list. We will here show the steps to get both of these products in R.
+
+# Get data:
+
+As an example for this step, we will be using an existing dataset which is derived from a Frankfurt dissertation on Michelsberg-type pottery (Höhn 2002). Birgit Höhn originally used it for a correspondence analysis aimed at refining the existing typochronology for the Early Neolithic (Lüning 1967). Her data contains counts of pottery vessel forms for 109 sites.
+We will suppose (for sake of argument) that the shared presence of a type at two sites is evidence of a cultural affinity born from some form of contact. We are therefore preparing the data for network analysis aimed at finding out the structure of this contact. Which sites were particularly important to the exchange of ideas about pottery in the Michelsberg culture?
+
+```{r get data}
+# We can access the Michelsberg data through the 'archdata' repository. 
+data(Michelsberg)
+
+#Visually check the data:
+head(Michelsberg)
+```
+
+To get detailed information about the dataset, run this command:
+```{r find out about dataset}
+help(Michelsberg)
+```
+
+# Adjacency Matrices
+
+The Michelsberg data contains observations from all of Lüning's MBK phases. We will pick one phase here to create a network from. This has the consequence that intergenerational contact (at least of the long-term traditional type) is not part of this analysis.
+```{r subset relevant rows and columns}
+mbk3 <- Michelsberg %>% 
+  filter(mbk_phase == "III") %>%  # select only Phase III
+  select(5:39)  # select all columns that contain information on the amount of the different pottery types
+
+#now look at the data to make sure it has worked
+head(mbk3)
+```
+This is now the data we need. Note that the dataset is still in the form of a rectangular matrix. That is, the sites are the rows and the pot types the columns. What we want now is a so-called **square matrix** or **adjacency matrix**. This will have those entities that we want as nodes in our network as both rows and columns, and the data between them will specify their connection.
+
+### but how do we decide on what makes a connection?
+There are essentially two different ways of doing this. The first is to work out whether a type is present at each pair of sites ("co-presence"). Then we add up the number of types that co-occur and get a weight, or strength, for the connection. The second way of arriving at a square matrix is to use a measure of statistical similarity. This calculates how similar every pair of assemblages is and gives that score as the weight of the connection. 
+**Note: These two approaches imply different underlying assumptions as to the nature of the connections that make up the network.**
+Co-presence assumes that a connection is there because a type is shared. The more types are shared, the stronger the connection is. Similarity is a more overall measure, less dependent on individual types, and takes into account also the proportions of types. There is a connection because people had similar proportions of similar pots.
+
+You can find useful R functions for both types in this script by Matt Peeples (2017):http://mattpeeples.net/netstats.html. For our example, we will choose co-presence as a basis for the network, as it allows for clearer conclusions. 
+
+```{r make co-presence matrix}
+# run the function
+mbk3mat <- co.p(mbk3, 0.2)
+
+# What we have now is a matrix that has both the upper and the lower triangles. All pairs of sites occur twice. Also present is the diagonal, which now tells us how many types a site shares with itself. This is unneccessary and confuses the network analysis package that we will use later. So we get rid of the duplicates and the diagonal.
+
+mbk3mat[lower.tri(mbk3mat, diag = TRUE)] <- 0  # we assign the value 0 to the the lower triangle including the diagonal. 
+```
+
+This data is now ready to be read into a network analysis package. You could also export it from R and feed it into an external network analysis tool, such as UCInet or Pajek. To do this, write a csv file:
+```{r write csv}
+# Remove the '#' from the line below if you want to run this code
+# write.csv(mbk3mat, file = "put_your_file_name_here.csv")
+```
+To save it for later use in R, make an R Data file
+```{r write Rda}
+save(mbk3mat, file = "mbk3mat.rda")
+```
+
+
+# Edge and node list format
+Apart from adjacency matrices, the second format that network data comes in is the so-called **edge list**, with its corollary, the **node list**. An edge list, as the name suggests, lists the edges of a graph.
+
+This is a minimal example:
+
+|from | to
+|----|-----
+|A    | B
+|A    | C
+
+But an edgelist can also store further information about that edge, for instance what weight the edge has, what type the edge as (if there are several), and any other information we might want to store.
+
+The node list is simply a list of nodes and their attributes. Unlike the matrix, we can easily add node attributes like geographic coordinates, size, colour, type, or anything that might become important to our analysis.
+
+Let us turn the Michelsberg data into an edge and node list. The process is more complicated, but you will see that there is a lot more information there.
+
+**Note: We are still using co-presence to determine our ties and their weights**
+
+`make_edgelist()` is a function that will make an edgelist from our data
+We'll apply it to our MBK data now:
+```{r make an edgelist}
+mbk3edges <- make.edgelist(mbk3)
+
+#Have a look at your edgelist
+View(mbk3edges)
+```
+This is ready to be given to a network analysis package, but for now it contains the same data as our co-presence matrix. Time to add some more. This will go in the nodelist, which can easily be extracted from the original dataset.
+```{r make a nodelist and add data}
+#first, make a nodelist by taking all the sites represented
+mbk3nodes <- Michelsberg %>%
+  filter(mbk_phase == "III") %>% #filter the data for the MBK III 
+  rownames_to_column(var = "site_feature") %>%  # make the rownames into a separate column
+  select(site_feature, site_name, feature_nr, x_utm32n, y_utm32n) %>%   # select the columns we want
+  rename(lon = x_utm32n, lat = y_utm32n, id = site_feature) #change some of the more unwieldy names
+```
+You now have an edge list and a node list with names and coordinates of the sites. You are ready to go and do some network analysis.
+
+Follow the steps above to save as a .csv or and .rda file
+```{r save edge and node list}
+save(mbk3edges, mbk3nodes, file = "mbk3edgelist.rda")
+```
+

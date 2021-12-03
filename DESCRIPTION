@@ -1,0 +1,17 @@
+Package: entangledafricaR
+Type: Package
+Title: Code Sharing for the Entangled Africa Network Group
+Version: 0.1.0
+Author: Nick Gestrich and SPP Entangled Africa Network Group
+Maintainer: The package maintainer <gestrich@uni-frankfurt.de>
+Description: The working group on network analysis in the DFG Priority Programme "Entangled Africa" shares its code here.
+    The repository aims at helping all interested projects in implementing network analyses in R and in exchanging their views and implementations.
+    For the moment, all contents are work in progress. Elements will be published in separate repositories along with publications. 
+    Members of the working group are welcome to add their code and to contribute changes.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
