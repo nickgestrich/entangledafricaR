@@ -27,8 +27,9 @@ library(knitr)
 ## Get data
 ```{r data import, echo=FALSE}
 # We will load the data saved from the data preparation vignette
-load(file = "mbk3mat.rda")
-load(file = "mbk3edgelist.rda")
+data(entangledafricaR::mbk3mat.rda)
+data(entangledafricaR::mbk3edges.rda)
+data(entangledafricaR::mbk3nodes.rda)
 ```
 
 ## Make a network from your data
