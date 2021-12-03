@@ -27,6 +27,7 @@ Imports:
     ggraph,
     knitr
 Depends: 
+    R (>= 2.10),
     tidyverse
 URL: https://github.com/nickgestrich/entangledafricaR
 BugReports: https://github.com/nickgestrich/entangledafricaR/issues
