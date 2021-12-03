@@ -81,7 +81,7 @@ This data is now ready to be read into a network analysis package. You could als
 ```
 To save it for later use in R, make an R Data file
 ```{r write Rda}
-save(mbk3mat, file = "mbk3mat.rda")
+# save(mbk3mat, file = "mbk3mat.rda")
 ```
 
 
@@ -124,6 +124,6 @@ You now have an edge list and a node list with names and coordinates of the site
 
 Follow the steps above to save as a .csv or and .rda file
 ```{r save edge and node list}
-save(mbk3edges, mbk3nodes, file = "mbk3edgelist.rda")
+# save(mbk3edges, mbk3nodes, file = "mbk3edgelist.rda")
 ```
 
