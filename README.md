@@ -1,6 +1,6 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
+![Entangled Africa Logo](https://www.dainst.blog/entangled-africa/wp-content/uploads/sites/11/2019/07/SPP_Logo.png)
 # entangledafricaR
 
 <!-- badges: start -->
