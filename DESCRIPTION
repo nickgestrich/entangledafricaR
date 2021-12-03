@@ -12,7 +12,6 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Suggests: 
-    knitr,
     rmarkdown
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1
@@ -23,7 +22,10 @@ Imports:
     magrittr,
     archdata,
     tidyselect,
-    utils
+    utils,
+    tidygraph,
+    ggraph,
+    knitr
 Depends: 
     tidyverse
 URL: https://github.com/nickgestrich/entangledafricaR
