@@ -17,6 +17,3 @@ A matrix
 \description{
 Co-Presence - from Peeples 2017, http://mattpeeples.net/netstats.html. Creates a square matrix with 1 and 0 for presence and absence.
 }
-\examples{
-co.p(df, thresh = 20)
-}

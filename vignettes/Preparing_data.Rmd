@@ -20,25 +20,14 @@ knitr::opts_chunk$set(
 #library(entangledafricaR)
 library(tidyverse) # for data transformation functions
 library(archdata)  # for archaeological example data
+library(entangledafricaR) # for our custom functions
 ```
 
----
-title: "How to get a rectangular data matrix into shape for network analysis"
-subtitle: "Instructions for the SPP Entangled Africa network workshop, 11-12 June 2021 "
-author: "N Gestrich, J-M Puerta-Schardt"
-date: "2 - June - 2021"
-output: html_document
----
-```{r libraries, echo=FALSE, warning=FALSE, message=FALSE}
-# this code chunk contains all the libraries we need to use in this process. If they are not present, use install.packages("package x") to get them.
-
-library(tidyverse) # for data transformation functions
-library(archdata)  # for archaeological example data
-```
+# Getting data into shape
 
 We will usually start our work with what is called a "rectangular" matrix of archaeological sites and finds. Rectangular in this case means that the row and column names are not identical. There are two ways of getting this data ready for network analysis. The first is to create a square matrix or adjacency matrix, the second is to create an edge list. We will here show the steps to get both of these products in R.
 
-# Get data:
+## Get data:
 
 As an example for this step, we will be using an existing dataset which is derived from a Frankfurt dissertation on Michelsberg-type pottery (Höhn 2002). Birgit Höhn originally used it for a correspondence analysis aimed at refining the existing typochronology for the Early Neolithic (Lüning 1967). Her data contains counts of pottery vessel forms for 109 sites.
 We will suppose (for sake of argument) that the shared presence of a type at two sites is evidence of a cultural affinity born from some form of contact. We are therefore preparing the data for network analysis aimed at finding out the structure of this contact. Which sites were particularly important to the exchange of ideas about pottery in the Michelsberg culture?
@@ -56,7 +45,7 @@ To get detailed information about the dataset, run this command:
 help(Michelsberg)
 ```
 
-# Adjacency Matrices
+## Adjacency Matrices
 
 The Michelsberg data contains observations from all of Lüning's MBK phases. We will pick one phase here to create a network from. This has the consequence that intergenerational contact (at least of the long-term traditional type) is not part of this analysis.
 ```{r subset relevant rows and columns}
@@ -96,7 +85,7 @@ save(mbk3mat, file = "mbk3mat.rda")
 ```
 
 
-# Edge and node list format
+## Edge and node list format
 Apart from adjacency matrices, the second format that network data comes in is the so-called **edge list**, with its corollary, the **node list**. An edge list, as the name suggests, lists the edges of a graph.
 
 This is a minimal example:
@@ -120,7 +109,7 @@ We'll apply it to our MBK data now:
 mbk3edges <- make.edgelist(mbk3)
 
 #Have a look at your edgelist
-View(mbk3edges)
+mbk3edges
 ```
 This is ready to be given to a network analysis package, but for now it contains the same data as our co-presence matrix. Time to add some more. This will go in the nodelist, which can easily be extracted from the original dataset.
 ```{r make a nodelist and add data}

@@ -6,8 +6,7 @@
 #' @return A matrix
 #' @export
 #'
-#' @examples
-#' co.p(df, thresh = 20)
+
 co.p <- function(x, thresh = 0.1) {
   # create matrix of proportions
   temp <- prop.table(as.matrix(x), 1)

@@ -2,3 +2,7 @@
 
 export(co.p)
 export(make.edgelist)
+importFrom(dplyr,filter)
+importFrom(dplyr,mutate)
+importFrom(dplyr,select)
+importFrom(magrittr,"%>%")
