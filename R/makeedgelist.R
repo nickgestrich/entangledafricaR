@@ -1,6 +1,15 @@
-# This function makes an edgelist out of an archaeological dataset by using the row names as nodes, and the rest of the columns as counts of types.
 
-# Make a dataset with  row names (sites) as a separate column
+
+#' Make an Edgelist.his function makes an edgelist out of an archaeological dataset by using the row names as nodes, and the rest of the columns as counts of types.
+#'
+#' @param data Dataset with nodes as row names
+#'
+#' @return A tibble
+#' @export
+#'
+#' @examples
+#'
+#' # Make a dataset with  row names (nodes) as a separate column
 make.edgelist <- function(data){
 
   data2 <- data %>%
