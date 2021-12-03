@@ -11,3 +11,4 @@ co.p <- function(x, thresh = 0.1) {
   # multiplication)
   out <- temp %*% t(temp)
   return(out)
+}
